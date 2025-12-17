@@ -3,15 +3,11 @@ const ExcelJS = require("exceljs");
 exports.handler = async () => {
   try {
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = "Matrix Systems";
-    workbook.created = new Date();
-
     const ws = workbook.addWorksheet("Template", {
-      views: [{ state: "frozen", ySplit: 1 }], // freeze header row
+      views: [{ state: "frozen", ySplit: 1 }],
     });
 
-    // Columns from your screenshot
-    const columns = [
+    ws.columns = [
       { header: "ID #", key: "id", width: 10 },
       { header: "LINE 1 TEXT", key: "line1", width: 24 },
       { header: "LINE 2 TEXT", key: "line2", width: 24 },
@@ -28,9 +24,6 @@ exports.handler = async () => {
       { header: "COMMENTS", key: "comments", width: 28 },
     ];
 
-    ws.columns = columns;
-
-    // Header styling
     const headerRow = ws.getRow(1);
     headerRow.height = 20;
     headerRow.eachCell((cell) => {
@@ -45,10 +38,8 @@ exports.handler = async () => {
       };
     });
 
-    // Optional: add a few blank rows so it “looks like a form”
     for (let i = 0; i < 25; i++) ws.addRow({});
 
-    // Generate file
     const buffer = await workbook.xlsx.writeBuffer();
     const b64 = Buffer.from(buffer).toString("base64");
 
@@ -58,7 +49,7 @@ exports.handler = async () => {
       headers: {
         "Content-Type":
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": 'attachment; filename="matrix_template.xlsx"',
+        "Content-Disposition": 'attachment; filename="matrix_excel_form.xlsx"',
         "Cache-Control": "no-store",
       },
       body: b64,
@@ -71,3 +62,4 @@ exports.handler = async () => {
     };
   }
 };
+

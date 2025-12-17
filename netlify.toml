@@ -5,3 +5,4 @@
   from = "/download-excel"
   to = "/.netlify/functions/download-excel"
   status = 200
+
